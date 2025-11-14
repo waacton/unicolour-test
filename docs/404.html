@@ -1,26 +1,15 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Unicolour Picker</title>
-    <base href="/unicolour-test/colour-picker/" /> <!-- needs to be /colour-picker/ when deployed -->
-    <link rel="stylesheet" href="css/app.css" />
-    <link rel="stylesheet" href="Wacton.Unicolour.Example.Web.styles.css" /> <!-- convention-based magic 🪄 required to make CSS isolation work (.razor.css files) -->
-    <link rel="icon" type="image/png" href="favicon.png" />
+    <script>
+        // Check if the request is for the /app/ folder or its subroutes
+        if (window.location.pathname.startsWith('/colour-picker/')) {
+            // Redirect to /app/index.html so the SPA router can handle it
+            window.location.replace('/colour-picker/index.html');
+        }
+    </script>
 </head>
-
 <body>
-<div id="app">
-    <svg class="loading-progress">
-        <circle r="40%" cx="50%" cy="50%" />
-        <circle r="40%" cx="50%" cy="50%" />
-    </svg>
-    <div class="loading-progress-text"></div>
-</div>
-
-<script src="_framework/blazor.webassembly.js"></script>
+<h1>404</h1>
 </body>
-
 </html>
