@@ -2,10 +2,14 @@
 <html>
 <head>
     <script>
-        // Check if the request is for the /app/ folder or its subroutes
-        if (window.location.pathname.startsWith('/colour-picker/')) {
-            // Redirect to /app/index.html so the SPA router can handle it
-            window.location.replace('/colour-picker/index.html');
+        // github pages can serve /colour-picker because it's a folder containing index.html
+        // but e.g. /colour-picker/print is a route handled by the app, not a folder that github pages can find
+        // so it will display this 404 page, and will redirect to the app to handle
+        const path = window.location.pathname;
+        if (path.includes('/colour-picker/')) {
+
+            const basePath = path.split('/').slice(0, -1).join('/');
+            window.location.replace(basePath + '/index.html');
         }
     </script>
 </head>
