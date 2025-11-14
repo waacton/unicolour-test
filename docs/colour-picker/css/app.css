@@ -1,0 +1,410 @@
+/*
+  1. Use a more-intuitive box-sizing model.
+*/
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+/*
+  2. Remove default margin
+*/
+* {
+    margin: 0;
+}
+
+/*
+  3. Allow percentage-based heights in the application
+*/
+html, body {
+    height: 100%;
+}
+
+/*
+  Typographic tweaks!
+  4. Add accessible line-height
+  5. Improve text rendering
+*/
+body {
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+/*
+  6. Improve media defaults
+*/
+img, picture, video, canvas, svg {
+    display: block;
+    max-width: 100%;
+}
+
+/*
+  7. Remove built-in form typography styles
+*/
+input, button, textarea, select {
+    font: inherit;
+}
+
+/*
+  8. Avoid text overflows
+*/
+p, h1, h2, h3, h4, h5, h6 {
+    overflow-wrap: break-word;
+}
+
+/*
+  9. Create a root stacking context
+*/
+#root, #__next {
+    isolation: isolate;
+}
+
+/*
+  10. Blazor defaults that seem useful
+*/
+
+html, body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.loading-progress {
+    position: relative;
+    display: block;
+    width: 8rem;
+    height: 8rem;
+    margin: 20vh auto 1rem auto;
+}
+
+    .loading-progress circle {
+        fill: none;
+        stroke: var(--default-accent);
+        stroke-width: 0.6rem;
+        transform-origin: 50% 50%;
+        transform: rotate(-90deg);
+    }
+
+        .loading-progress circle:last-child {
+            stroke: var(--light);
+            stroke-dasharray: calc(3.141 * var(--blazor-load-percentage, 0%) * 0.8), 500%;
+            transition: stroke-dasharray 0.05s ease-in-out;
+        }
+
+.loading-progress-text {
+    position: absolute;
+    text-align: center;
+    font-weight: bold;
+    inset: calc(20vh + 3.25rem) 0 auto 0.2rem;
+    color: var(--light)
+}
+
+    .loading-progress-text:after {
+        content: var(--blazor-load-percentage-text, "Loading");
+    }
+    
+/*
+  11. Custom defaults for app
+*/
+
+:root {
+    --dark: #404046;
+    --less-dark: #606069;
+    --light: #E8E8FF;
+    --less-light: #DADAF0;
+    --default-accent: #FF1493;
+    --dark-stripes: repeating-linear-gradient(-45deg, var(--dark), var(--dark) 10px, var(--less-dark) 10px, var(--less-dark) 20px);
+    --light-stripes: repeating-linear-gradient(-45deg, var(--light), var(--light) 10px, var(--less-light) 10px, var(--less-light) 20px);
+    --dark-shadow: 0 0 0.05rem var(--dark);
+    --light-shadow: 0 0 0.05rem var(--light);
+    --light-shadow-strong: 0 0 0.075rem var(--light);
+    
+    --icon-width: 48px;
+    --icon-width-mobile: 32px;
+    --icon-padding: 1rem;
+    --border-width: 1px;
+    --border-radius: 0.5rem;
+    --input-height: 3rem;
+    --slider-thumb-width: calc(var(--input-height) / 2);
+    --content-padding: 32px;
+    --content-padding-top: calc(var(--content-padding) * 2);
+    --dark-background-padding: 1.5rem;
+    
+    --top-bar-height: calc(var(--icon-width) + 2 * var(--icon-padding) + 2 * var(--border-width));
+    --top-bar-height-mobile: calc(var(--icon-width-mobile) + 2 * var(--icon-padding) + 2 * var(--border-width));
+    --nav-bar-height: 2rem;
+    --nav-bar-height-mobile: 2rem;
+    
+    /* nav buttons are cut-off by the smaller nav bar; increase the height by the cut-off amount to always show an effective 3rem button area  */
+    --nav-button-offset: calc(var(--input-height) - var(--nav-bar-height));
+    --nav-button-height: calc(var(--input-height) + var(--nav-button-offset));
+    --nav-button-offset-mobile: calc(var(--input-height) - var(--nav-bar-height-mobile));
+    --nav-button-height-mobile: calc(var(--input-height) + var(--nav-button-offset-mobile));
+}
+
+body {
+    background: var(--default-accent); /* overridden when app is loaded, needed for the "loading" screen */
+}
+
+* {
+    user-select: none
+}
+
+#app {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+}
+
+.top-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: var(--top-bar-height);
+    width: 100%;
+    
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--dark);
+    border: var(--border-width) solid var(--dark);
+    filter: drop-shadow(var(--light-shadow));
+    padding: var(--icon-padding);
+
+    z-index: 2;
+}
+
+.content {
+    margin-top: var(--top-bar-height); /* ensure no content is hidden behind top bar (for proper scrolling) */
+    margin-bottom: var(--nav-bar-height); /* ensure no content is hidden behind bottom nav bar (for proper scrolling) */
+    overflow-y: auto;
+    z-index: 0;
+}
+
+.nav-bar {
+    position: fixed;
+    bottom: 0;
+    left: 12.5%;
+    height: var(--nav-bar-height);
+    width: 75%;
+    
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    background: var(--dark);
+    border: var(--border-width) solid var(--dark);
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+    filter: drop-shadow(var(--light-shadow));
+    padding-left: var(--icon-padding);
+    padding-right: var(--icon-padding);
+    
+    z-index: 1;
+}
+
+.icon {
+    height: var(--icon-width);
+}
+
+.unicolour-icon {
+    background: var(--dark);
+    border: var(--border-width) solid var(--dark);
+    border-radius: var(--border-radius);
+    filter: drop-shadow(var(--light-shadow));
+}
+
+.title-text {
+    font-variant: all-small-caps;
+    font-size: 2rem;
+    letter-spacing: 0.25rem;
+}
+
+.max-width-wrapper {
+    max-width: 720px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: var(--content-padding-top) var(--content-padding) var(--content-padding) var(--content-padding);
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+    .gap-small { 
+        gap: 0.5rem;
+    }
+    
+    .gap-medium {
+        gap: 1rem;
+    }
+    
+    .gap-large {
+        gap: 2rem;
+    }
+
+.dark-background {
+    background: var(--dark);
+    border: var(--border-width) solid var(--dark);
+    border-radius: var(--border-radius);
+    filter: drop-shadow(var(--light-shadow));
+    padding: var(--dark-background-padding);
+}
+
+select, button, .label-as-button {
+    background-color: var(--dark);
+    color: var(--light);
+    width: 100%;
+    height: var(--input-height);
+    border: var(--border-width) solid var(--dark);
+    border-radius: var(--border-radius);
+    filter: drop-shadow(var(--light-shadow));
+}
+
+    .label-as-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    select:hover, button:hover, .label-as-button:hover {
+        filter: drop-shadow(var(--light-shadow-strong));
+    }
+    
+    select:active, button:active, .label-as-button:active {
+        border: var(--border-width) solid var(--less-dark);
+        filter: drop-shadow(var(--light-shadow-strong));
+    }
+
+.slider-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    
+    position: relative;
+}
+
+input[type=range] {
+    appearance: none;
+    width: 100%;
+    height: var(--input-height);
+    border-radius: var(--border-radius);
+    filter: drop-shadow(var(--light-shadow));
+}
+
+input[type=range]::-webkit-slider-thumb {
+    appearance: none;
+    width: var(--slider-thumb-width);
+    height: var(--input-height);
+    border: var(--border-width) dashed var(--dark);
+    border-radius: var(--border-radius);
+    outline: var(--border-width) dashed var(--light);
+    background: transparent;
+}
+
+input[type=range]::-moz-range-thumb {
+    appearance: none;
+    width: var(--slider-thumb-width);
+    height: 2.9rem; /* not quite 3rem like -webkit */
+    border: var(--border-width) dashed var(--dark);
+    border-radius: var(--border-radius);
+    outline: var(--border-width) dashed var(--light);
+    background: transparent;
+}
+
+.show-thumb::-webkit-slider-thumb {
+    opacity: 1
+}
+
+.show-thumb::-moz-range-thumb {
+    opacity: 1
+}
+
+.hide-thumb::-webkit-slider-thumb {
+    opacity: 0
+}
+
+.hide-thumb::-moz-range-thumb {
+    opacity: 0
+}
+
+.slider-gradient {
+    /* background-image: this attribute is set inline by app for better use of dynamic values  */
+    background-repeat: no-repeat, repeat, repeat;
+    background-size: 100% 50%, 100%, 100%;
+    background-position: center, center, center;
+}
+
+.slider-value {
+    flex: 0 0 4rem;
+    text-align: right;
+    margin: 0 0.5rem;
+}
+
+.slider-label-right {
+    flex: 0 0 1.25rem;
+    text-align: left;
+}
+
+.slider-label-inside {
+    position: absolute;
+    left: calc(var(--slider-thumb-width) + 0.5rem);
+    pointer-events: none;
+}
+
+.light-text {
+    color: var(--light);
+}
+
+.dark-text {
+    color: var(--dark);
+}
+
+.dark-text-with-contrast {
+    color: var(--dark);
+    text-shadow: var(--light-shadow);
+}
+
+.light-text-with-contrast {
+    color: var(--light);
+    text-shadow: var(--dark-shadow);
+}
+
+.monospace {
+    font-family: monospace;
+    font-size: 1rem;
+    letter-spacing: 0.05rem;
+    white-space: pre;
+}
+
+@media screen and (max-width: 720px) {
+    .top-bar {
+        height: var(--top-bar-height-mobile)
+    }
+
+    .content {
+        margin-top: var(--top-bar-height-mobile); /* ensure no content is hidden behind top bar (for proper scrolling) */
+        margin-bottom: var(--nav-bar-height-mobile); /* ensure no content is hidden behind bottom nav bar (for proper scrolling) */
+    }
+    
+    .icon {
+        height: var(--icon-width-mobile);
+    }
+
+    .title-text {
+        font-size: 1.75rem;
+    }
+}
+
+/* 
+    these classes use dynamically changing colour so need to generated by code in MainLayout.razor
+    but defined here to provide better IDE navigation (classes generated inside MainLayout.razor <style> are not discoverable) 
+ */
+.colour-background {}
+.colour-text {}
