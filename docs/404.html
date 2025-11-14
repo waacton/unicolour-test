@@ -1,0 +1,15 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        // Check if the request is for the /app/ folder or its subroutes
+        if (window.location.pathname.startsWith('/colour-picker/')) {
+            // Redirect to /app/index.html so the SPA router can handle it
+            window.location.replace('/colour-picker/index.html');
+        }
+    </script>
+</head>
+<body>
+<h1>404</h1>
+</body>
+</html>
